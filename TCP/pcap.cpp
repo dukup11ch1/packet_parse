@@ -7,8 +7,8 @@
 #include <stdint.h>
 
 void usage() {
-  printf("syntax: pcap_test <interface>\n");
-  printf("sample: pcap_test wlan0\n");
+printf("syntax: pcap_test <interface>\n");
+printf("sample: pcap_test wlan0\n");
 }
 
 void print_mac(char head[], unsigned char data[])

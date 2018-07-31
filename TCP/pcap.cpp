@@ -6,22 +6,9 @@
 #include <netinet/if_ether.h>
 #include <stdint.h>
 
-void usage() {
-printf("syntax: pcap_test <interface>\n");
-printf("sample: pcap_test wlan0\n");
-}
-
-void print_mac(char head[], unsigned char data[])
-{
-  printf("%s\t%02x:%02x:%02x:%02x:%02x:%02x\n", head,
-    data[0], data[1], data[2], data[3], data[4], data[5]);
-}
-
-void print_data(char head[], unsigned char data[])
-{
-  printf("%s\t%02x %02x %02x %02x %02x %02x %02x %02x\n\t\t%02x %02x %02x %02x %02x %02x %02x %02x\n", head,
-    data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15]);
-}
+void usage();
+void print_mac(char head[], unsigned char data[]);
+void print_data(char head[], unsigned char data[]);
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -71,6 +58,24 @@ int main(int argc, char* argv[]) {
 
   pcap_close(handle);
   return 0;
+}
+
+void usage() 
+{
+printf("syntax: pcap_test <interface>\n");
+printf("sample: pcap_test wlan0\n");
+}
+
+void print_mac(char head[], unsigned char data[])
+{
+  printf("%s\t%02x:%02x:%02x:%02x:%02x:%02x\n", head,
+    data[0], data[1], data[2], data[3], data[4], data[5]);
+}
+
+void print_data(char head[], unsigned char data[])
+{
+  printf("%s\t%02x %02x %02x %02x %02x %02x %02x %02x\n\t\t%02x %02x %02x %02x %02x %02x %02x %02x\n", head,
+    data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15]);
 }
 
 

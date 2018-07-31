@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
         printf("dst ip:\t\t%s\n", inet_ntoa(ip_h->ip_dst));
         printf("src port:\t%u\n", htons(tcp_h->th_sport));
         printf("dst port:\t%u\n", htons(tcp_h->th_dport));
-        print_data("data:\t", (unsigned char *)data);
+        ip_h->ip_len-ip_h->ip_hl-sizeof(struct ethhdr)
       }
     }
     printf("*********************************************************\n");

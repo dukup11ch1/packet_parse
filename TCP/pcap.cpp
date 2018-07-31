@@ -8,7 +8,7 @@
 
 void usage();
 void print_mac(char head[], unsigned char data[]);
-void print_data(char head[], unsigned char data[]);
+void print_data(unsigned char data[],int len);
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     int res = pcap_next_ex(handle, &header, &packet);//live packetcapture
     if (res == 0) continue;//buffer timeout
     if (res == -1 || res == -2) break;//error
-    printf("*********************************************************\n");
+    printf("===========================================================================\n");
     printf("%u bytes captured\n", header->caplen);
     eth_h = (struct ethhdr*)packet;
     if (htons(eth_h->h_proto) == ETHERTYPE_IP)//ETHERTYPE_IP is in if_ether.h
@@ -42,18 +42,19 @@ int main(int argc, char* argv[]) {
       ip_h = (struct ip*)(packet + sizeof(struct ethhdr));
       if (ip_h->ip_p == IPPROTO_TCP)//IPPROTO_TCP in tcp.h
       {
-        tcp_h = (struct tcphdr*)((void *)ip_h + ip_h->ip_hl * 4);
+        tcp_h = (struct tcphdr*)((char *)ip_h + ip_h->ip_hl * 4);
         data = (unsigned char *)(tcp_h + tcp_h->th_off * 4);
         print_mac("src_MAC:", (unsigned char *)eth_h->h_source);
         print_mac("dst_MAC:", (unsigned char *)eth_h->h_dest);
-        printf("src ip:\t\t%s\n", inet_ntoa(ip_h->ip_src));//inet_ntoa = int ip to string
-        printf("dst ip:\t\t%s\n", inet_ntoa(ip_h->ip_dst));
+        printf("src ip:\t\t%s\n", inet_ntop(ip_h->ip_src));//inet_ntoa = int ip to string
+        printf("dst ip:\t\t%s\n", inet_ntop(ip_h->ip_dst));
         printf("src port:\t%u\n", htons(tcp_h->th_sport));
         printf("dst port:\t%u\n", htons(tcp_h->th_dport));
-        ip_h->ip_len-ip_h->ip_hl-sizeof(struct ethhdr)
+        int data_len=ip_h->ip_len*4-ip_h->ip_hl*4-sizeof(struct ethhdr)-tcp_h->th_off*4;
+        print_data((unsigned char *)data)
       }
     }
-    printf("*********************************************************\n");
+    printf("===========================================================================\n");
   }
 
   pcap_close(handle);
@@ -72,10 +73,12 @@ void print_mac(char head[], unsigned char data[])
     data[0], data[1], data[2], data[3], data[4], data[5]);
 }
 
-void print_data(char head[], unsigned char data[])
+void print_data(unsigned char data[],int len)
 {
-  printf("%s\t%02x %02x %02x %02x %02x %02x %02x %02x\n\t\t%02x %02x %02x %02x %02x %02x %02x %02x\n", head,
-    data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],data[8],data[9],data[10],data[11],data[12],data[13],data[14],data[15]);
+  printf("data\t")
+  for (i=0;i<16&&i<len;i++){
+    printf("%c ",data[i]);
+  }
 }
 
 

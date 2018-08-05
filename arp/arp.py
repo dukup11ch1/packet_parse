@@ -1,8 +1,13 @@
 import socket
-s = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_IP)
-s.bind(("192.168.1.38",0))
-s.setsockopt(socket.IPPROTO_IP,socket.IP_HDRINCL,1)
-s.ioctl(socket.SIO_RCVALL,socket.RCVALL_ON)
-while True:
-   data = s.recvfrom(10000)
-   
+import time
+from uuid import getnode as get_mac
+import header
+import sys
+
+
+sock = socket.socket(socket.AF_PACKET,socket.SOCK_RAW)
+
+sock.bind((sys.argv[1],socket.SOCK_RAW))
+
+
+

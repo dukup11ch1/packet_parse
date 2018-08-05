@@ -142,8 +142,34 @@ class Arp:
             self._prototype=raw[2:4]
             self._maclen=raw[4:5]
             self._iplen=raw[5:6]
-            self._operationcode=raw[6:8]
+            self._opcode=raw[6:8]
             self._srcmac=raw[8:14]
             self._srcip=raw[14:18]
             self._dstmac=raw[18:24]
             self._dstip=raw[24:28]
+    @property
+    def header(self):
+        return self._hwtype+self._prototype+self._maclen+self._iplen+self._opcode+self._srcmac+self._srcip+self._dstmac+self._dstip
+    
+    @property
+    def hwtype(self):
+        return self._hwtype
+    
+    @property
+    def src(self):
+        srcip = struct.unpack('!4B', self._srcip)
+        srcip = '%d.%d.%d.%d' % srcip
+        srcmac = struct.unpack('!6B', self._srcmac)
+        srcmac = '%02x:%02x:%02x:%02x:%02x:%02x' % srcmac
+        return srcmac,srcip
+
+    @property
+    def dst(self):
+        dstip = struct.unpack('!4B', self._dstip)
+        dstip = '%d.%d.%d.%d' % dstip
+        dstmac = struct.unpack('!6B', self._dstmac)
+        dstmac = '%02x:%02x:%02x:%02x:%02x:%02x' % dstmac
+        return dstmac,dstip
+    def opcode(self):
+        return self.opcode
+    

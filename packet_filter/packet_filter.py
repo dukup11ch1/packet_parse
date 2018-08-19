@@ -4,7 +4,7 @@ import header
 
 try:
     s = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_IP)
-    s.bind(("192.168.3.191",0))
+    s.bind((sys.argv[1],0))
     s.setsockopt(socket.IPPROTO_IP,socket.IP_HDRINCL,1)
     s.ioctl(socket.SIO_RCVALL,socket.RCVALL_ON)
 except socket.error , msg:
@@ -17,7 +17,7 @@ while True:
     head = header.Tcp(packet)
     if head.dstport()==80:
         try:
-            if head.data().split()[4]=="sex.com":
+            if head.data().split()[4]==sys.argv[2]:
                 print "block"
         
         except:

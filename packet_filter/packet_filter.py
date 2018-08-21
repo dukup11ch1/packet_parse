@@ -13,7 +13,7 @@ while True:
     head = header.Tcp(packet)
     if head.dstport()==80:
         try:
-            if head.data().split()[4] in sys.argv:
+            if head.data().split()[4] in sys.argv[1:]:
                 print "block!"
                 continue
         
